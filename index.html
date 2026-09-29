@@ -1,0 +1,606 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>From $500 to $1,000,000 — An Educational Projection</title>
+<style>
+  :root {
+    --bg: #0f1419;
+    --card: #1a2230;
+    --text: #e8edf2;
+    --muted: #9aa7b5;
+    --accent: #4da3ff;
+    --good: #3fb96f;
+    --warn: #e0a23c;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.6;
+    padding: 2rem 1rem;
+  }
+  .container { max-width: 860px; margin: 0 auto; }
+  header { text-align: center; margin-bottom: 2.5rem; }
+  h1 { font-size: 2rem; margin-bottom: 0.5rem; }
+  h1 .highlight { color: var(--accent); }
+  .subtitle { color: var(--muted); font-size: 1.05rem; }
+  section {
+    background: var(--card);
+    border-radius: 10px;
+    padding: 1.5rem 1.75rem;
+    margin-bottom: 1.5rem;
+  }
+  h2 {
+    font-size: 1.25rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid #2c3a4d;
+    padding-bottom: 0.4rem;
+  }
+  .inputs { display: flex; gap: 1rem; flex-wrap: wrap; margin-top: 0.75rem; }
+  .input-box {
+    flex: 1 1 180px;
+    background: #131b26;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    text-align: center;
+  }
+  .input-box .label { color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .input-box .value { font-size: 1.4rem; font-weight: 600; margin-top: 0.25rem; }
+  table { width: 100%; border-collapse: collapse; margin-top: 0.75rem; }
+  th, td { padding: 0.65rem 0.75rem; text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  thead th { color: var(--muted); font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.04em; border-bottom: 1px solid #2c3a4d; }
+  tbody tr { border-bottom: 1px solid #232f3f; }
+  tbody tr:last-child { border-bottom: none; }
+  td.years { font-weight: 600; color: var(--accent); }
+  .bar-chart { margin-top: 1rem; }
+  .bar-row { display: flex; align-items: center; margin-bottom: 0.6rem; }
+  .bar-label { width: 4.5rem; font-size: 0.9rem; color: var(--muted); flex-shrink: 0; }
+  .bar-track { flex: 1; background: #131b26; border-radius: 5px; height: 26px; position: relative; overflow: hidden; }
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #2b6cb0, var(--accent));
+    border-radius: 5px;
+    width: 0;
+    transition: width 0.8s ease;
+  }
+  .bar-value { width: 5.5rem; text-align: right; font-size: 0.9rem; font-weight: 600; flex-shrink: 0; }
+  .note { color: var(--muted); font-size: 0.9rem; margin-top: 0.75rem; }
+  .disclaimer { font-size: 0.9rem; color: var(--muted); }
+  .disclaimer strong { color: var(--warn); }
+  ul { padding-left: 1.25rem; }
+  li { margin-bottom: 0.4rem; }
+  footer { text-align: center; color: var(--muted); font-size: 0.85rem; margin-top: 2rem; }
+
+  /* Calculator styles */
+  .calc-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.25rem 2rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 640px) {
+    .calc-grid { grid-template-columns: 1fr; }
+  }
+  .calc-field label {
+    display: block;
+    font-size: 0.85rem;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.35rem;
+  }
+  .calc-field .row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+  .calc-field input[type="range"] {
+    flex: 1;
+    accent-color: var(--accent);
+    cursor: pointer;
+  }
+  .calc-field input[type="number"] {
+    width: 110px;
+    background: #131b26;
+    border: 1px solid #2c3a4d;
+    border-radius: 6px;
+    color: var(--text);
+    padding: 0.45rem 0.6rem;
+    font-size: 1rem;
+    text-align: right;
+  }
+  .calc-field input[type="number"]:focus {
+    outline: none;
+    border-color: var(--accent);
+  }
+  .calc-results {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-top: 1.5rem;
+  }
+  .calc-result-box {
+    flex: 1 1 160px;
+    background: #131b26;
+    border-radius: 8px;
+    padding: 0.9rem 1rem;
+    text-align: center;
+  }
+  .calc-result-box .label { color: var(--muted); font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; }
+  .calc-result-box .value { font-size: 1.3rem; font-weight: 600; margin-top: 0.25rem; }
+  .calc-result-box .value.accent { color: var(--accent); }
+  .scenario-tag {
+    display: inline-block;
+    background: #2c3a4d;
+    color: var(--muted);
+    font-size: 0.75rem;
+    padding: 0.15rem 0.6rem;
+    border-radius: 20px;
+    margin-left: 0.5rem;
+    vertical-align: middle;
+  }
+
+  /* Asset class spectrum styles */
+  .spectrum-container { margin-top: 1.25rem; }
+  .spectrum-bar {
+    position: relative;
+    height: 40px;
+    border-radius: 8px;
+    background: linear-gradient(90deg, #2d5a3d 0%, #4a7c59 25%, #7a8a4a 50%, #a06a3a 75%, #a04a3a 100%);
+    margin-bottom: 0.5rem;
+  }
+  .spectrum-labels {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    color: var(--muted);
+    margin-bottom: 1.25rem;
+  }
+  .spectrum-markers {
+    position: relative;
+    height: 30px;
+    margin-bottom: 0.5rem;
+  }
+  .spectrum-marker {
+    position: absolute;
+    transform: translateX(-50%);
+    text-align: center;
+  }
+  .spectrum-marker .dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    margin: 0 auto 0.25rem;
+    border: 2px solid #fff;
+  }
+  .spectrum-marker .marker-label {
+    font-size: 0.75rem;
+    color: var(--accent);
+    font-weight: 600;
+    white-space: nowrap;
+  }
+  .asset-class-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  @media (max-width: 640px) {
+    .asset-class-grid { grid-template-columns: 1fr; }
+  }
+  .asset-class-card {
+    background: #131b26;
+    border-radius: 8px;
+    padding: 1rem 1.1rem;
+    border-left: 4px solid var(--accent);
+  }
+  .asset-class-card h3 {
+    font-size: 1rem;
+    margin-bottom: 0.5rem;
+  }
+  .asset-class-card .tag {
+    display: inline-block;
+    font-size: 0.7rem;
+    padding: 0.15rem 0.55rem;
+    border-radius: 20px;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+  }
+  .tag-lower { background: #2d5a3d; color: #7fd6a0; }
+  .tag-moderate { background: #4a5a2d; color: #c8d67f; }
+  .tag-higher { background: #5a3a2d; color: #e8a07f; }
+  .asset-class-card p {
+    font-size: 0.88rem;
+    color: var(--muted);
+    margin-bottom: 0.35rem;
+  }
+  .asset-class-card p strong { color: var(--text); }
+  .asset-class-card .caveat {
+    font-size: 0.82rem;
+    color: var(--warn);
+    margin-top: 0.5rem;
+    margin-bottom: 0;
+  }
+</style>
+</head>
+<body>
+<div class="container">
+
+  <header>
+    <h1>From <span class="highlight">$500</span> to <span class="highlight">$1,000,000</span></h1>
+    <p class="subtitle">An educational projection of compound growth with regular contributions</p>
+  </header>
+
+  <section>
+    <h2>Interactive Calculator</h2>
+    <p class="note" style="margin-top:0;">Adjust the inputs below to see how changes affect the estimated time to reach your target. Results update instantly.</p>
+    <div class="calc-grid">
+      <div class="calc-field">
+        <label for="calc-start">Starting Capital</label>
+        <div class="row">
+          <input type="range" id="calc-start-slider" min="0" max="10000" step="100" value="500">
+          <input type="number" id="calc-start" min="0" step="100" value="500">
+        </div>
+      </div>
+      <div class="calc-field">
+        <label for="calc-monthly">Monthly Contribution</label>
+        <div class="row">
+          <input type="range" id="calc-monthly-slider" min="0" max="2000" step="25" value="200">
+          <input type="number" id="calc-monthly" min="0" step="25" value="200">
+        </div>
+      </div>
+      <div class="calc-field">
+        <label for="calc-target">Target Portfolio Value</label>
+        <div class="row">
+          <input type="range" id="calc-target-slider" min="10000" max="5000000" step="10000" value="1000000">
+          <input type="number" id="calc-target" min="1000" step="1000" value="1000000">
+        </div>
+      </div>
+      <div class="calc-field">
+        <label for="calc-return">Assumed Annual Return</label>
+        <div class="row">
+          <input type="range" id="calc-return-slider" min="0" max="15" step="0.25" value="8">
+          <input type="number" id="calc-return" min="0" max="50" step="0.25" value="8">
+        </div>
+      </div>
+    </div>
+    <div class="calc-results">
+      <div class="calc-result-box">
+        <div class="label">Estimated Time to Target</div>
+        <div class="value accent" id="calc-years">—</div>
+      </div>
+      <div class="calc-result-box">
+        <div class="label">Total Contributed</div>
+        <div class="value" id="calc-contributed">—</div>
+      </div>
+      <div class="calc-result-box">
+        <div class="label">Growth from Compounding</div>
+        <div class="value" id="calc-growth">—</div>
+      </div>
+    </div>
+    <p class="note">The assumed annual return is converted to an equivalent monthly rate and compounded monthly. This is a hypothetical scenario illustration, not a forecast or guarantee of future results.</p>
+  </section>
+
+  <section>
+    <h2>Starting Assumptions</h2>
+    <div class="inputs">
+      <div class="input-box">
+        <div class="label">Starting Capital</div>
+        <div class="value">$500</div>
+      </div>
+      <div class="input-box">
+        <div class="label">Monthly Contribution</div>
+        <div class="value">$200</div>
+      </div>
+      <div class="input-box">
+        <div class="label">Target</div>
+        <div class="value">$1,000,000</div>
+      </div>
+    </div>
+    <ul style="margin-top:1rem;">
+      <li>Contributions are made at the <strong>end of each month</strong>.</li>
+      <li>Returns are <strong>compounded monthly</strong> — each annual return assumption is converted to an equivalent monthly rate.</li>
+      <li>No taxes, fees, inflation, or contribution increases are modeled.</li>
+      <li>The annual return is held constant for the entire projection (real markets fluctuate).</li>
+    </ul>
+  </section>
+
+  <section>
+    <h2>Hypothetical Return Scenarios <span class="scenario-tag">Not forecasts or guaranteed returns</span></h2>
+    <p class="note" style="margin-top:0;">The table below compares four hypothetical annual return assumptions. These are illustrative inputs for scenario analysis only — they are <strong>not</strong> predictions, recommendations, or guarantees of future investment performance.</p>
+    <table>
+      <thead>
+        <tr>
+          <th>Annual Return (Hypothetical)</th>
+          <th>Equivalent Monthly Rate</th>
+          <th>Years to $1M</th>
+          <th>Total Contributed</th>
+          <th>Growth from Compounding</th>
+        </tr>
+      </thead>
+      <tbody id="scenario-table">
+        <!-- populated by JavaScript -->
+      </tbody>
+    </table>
+    <p class="note">Total Contributed = starting capital + $200 × number of months. Growth from Compounding = $1,000,000 − Total Contributed.</p>
+  </section>
+
+  <section>
+    <h2>Visual Comparison</h2>
+    <p class="note" style="margin-top:0;">Time to reach $1,000,000 at each hypothetical annual return assumption:</p>
+    <div class="bar-chart" id="bar-chart">
+      <!-- populated by JavaScript -->
+    </div>
+  </section>
+
+  <section>
+    <h2>Where Does the Return Assumption Come From?</h2>
+    <p>The return percentage used in this tool is an <strong>input for scenario analysis</strong> — a placeholder that lets you explore how different growth rates affect the time needed to reach a target. It is not a prediction of what any investment will actually earn.</p>
+    <p style="margin-top:0.75rem;">Actual investment returns depend on many factors, including:</p>
+    <ul style="margin-top:0.5rem;">
+      <li><strong>Asset mix</strong> — the proportion of stocks, bonds, cash, and other holdings.</li>
+      <li><strong>Market performance</strong> — which varies significantly from year to year and is inherently unpredictable.</li>
+      <li><strong>Fees and expenses</strong> — fund management fees, transaction costs, and advisory fees reduce net returns.</li>
+      <li><strong>Taxes</strong> — investment gains may be taxed, reducing the amount available to compound.</li>
+      <li><strong>Inflation</strong> — erodes purchasing power, so a nominal return may represent a much smaller real return.</li>
+      <li><strong>Volatility</strong> — the sequence of good and bad years can materially affect outcomes, especially over shorter periods.</li>
+    </ul>
+    <p style="margin-top:0.75rem;">Historical averages for broad market indices are sometimes used as rough reference points, but past performance does not guarantee future results. A higher assumed return produces a shorter projected timeline, but it also implies greater risk and uncertainty. There is no return rate that any investor can reliably count on.</p>
+  </section>
+
+  <section>
+    <h2>How Different Return Assumptions Relate to Asset Classes</h2>
+    <p>The calculator's return assumption doesn't exist in a vacuum — it conceptually reflects the type of underlying investments. The four categories below illustrate how different asset classes are <strong>generally</strong> associated with different risk and return profiles. These are broad educational generalizations, not guarantees or recommendations.</p>
+
+    <div class="spectrum-container">
+      <div class="spectrum-bar"></div>
+      <div class="spectrum-labels">
+        <span>Lower risk / Lower expected return</span>
+        <span>Higher risk / Higher expected return</span>
+      </div>
+      <div class="spectrum-markers">
+        <div class="spectrum-marker" style="left: 12%;">
+          <div class="dot"></div>
+          <div class="marker-label">~4%</div>
+        </div>
+        <div class="spectrum-marker" style="left: 38%;">
+          <div class="dot"></div>
+          <div class="marker-label">~6%</div>
+        </div>
+        <div class="spectrum-marker" style="left: 62%;">
+          <div class="dot"></div>
+          <div class="marker-label">~8%</div>
+        </div>
+        <div class="spectrum-marker" style="left: 85%;">
+          <div class="dot"></div>
+          <div class="marker-label">~10%</div>
+        </div>
+      </div>
+      <p class="note">The markers above show where the calculator's 4%, 6%, 8%, and 10% assumptions might <strong>conceptually</strong> sit on a simplified risk/return spectrum. This is an illustrative framing, not a precise mapping.</p>
+    </div>
+
+    <div class="asset-class-grid">
+      <div class="asset-class-card" style="border-left-color: #3fb96f;">
+        <h3>Cash / Deposits</h3>
+        <span class="tag tag-lower">Lower expected return / Lower volatility</span>
+        <p><strong>Role:</strong> Capital preservation and liquidity. Often used for emergency funds or short-term needs.</p>
+        <p><strong>Relative risk:</strong> Low — value is stable, but purchasing power may erode due to inflation.</p>
+        <p><strong>Return expectation:</strong> Generally lower. Interest rates on deposits tend to be modest.</p>
+        <p class="caveat">Caveat: Inflation can cause the real (inflation-adjusted) return on cash to be negative over long periods.</p>
+      </div>
+
+      <div class="asset-class-card" style="border-left-color: #a0c44a;">
+        <h3>Bonds</h3>
+        <span class="tag tag-moderate">Moderate expected return / Moderate volatility</span>
+        <p><strong>Role:</strong> Income generation and portfolio stability. Typically less volatile than equities.</p>
+        <p><strong>Relative risk:</strong> Low to moderate — subject to interest rate risk and credit/default risk.</p>
+        <p><strong>Return expectation:</strong> Generally moderate. Historically between cash and equities over long periods.</p>
+        <p class="caveat">Caveat: Rising interest rates cause existing bond prices to fall; not all bonds are equally safe.</p>
+      </div>
+
+      <div class="asset-class-card" style="border-left-color: #e0a23c;">
+        <h3>Mixed Portfolio</h3>
+        <span class="tag tag-moderate">Moderate expected return / Moderate volatility</span>
+        <p><strong>Role:</strong> Balanced growth and stability. Combines equities and bonds in varying proportions.</p>
+        <p><strong>Relative risk:</strong> Moderate — diversification reduces but does not eliminate losses.</p>
+        <p><strong>Return expectation:</strong> Moderate. Blends the higher potential of equities with the relative stability of bonds.</p>
+        <p class="caveat">Caveat: The specific mix matters greatly — a 90/10 stock/bond allocation behaves very differently from 50/50.</p>
+      </div>
+
+      <div class="asset-class-card" style="border-left-color: #e06a4a;">
+        <h3>Broad Equities</h3>
+        <span class="tag tag-higher">Higher expected return / Higher volatility</span>
+        <p><strong>Role:</strong> Long-term growth. Represents ownership in a diversified basket of companies.</p>
+        <p><strong>Relative risk:</strong> Higher — prices can decline significantly in the short to medium term.</p>
+        <p><strong>Return expectation:</strong> Generally higher over long periods, but with substantial year-to-year variation.</p>
+        <p class="caveat">Caveat: Higher historical average returns come with the risk of prolonged drawdowns and significant short-term losses.</p>
+      </div>
+    </div>
+
+    <p class="note" style="margin-top:1rem; font-style:italic;">The return assumption in the calculator is a scenario input, not a forecast. Different asset classes have historically produced different return patterns, but future returns are uncertain.</p>
+  </section>
+
+  <section>
+    <h2>How Compounding Works</h2>
+    <p>Compounding means you earn returns not just on your original money, but also on the returns that money has already generated. In year one, your $500 earns a little interest. In year two, you earn interest on the original $500 <em>plus</em> that first year's interest — and on every monthly contribution along the way.</p>
+    <p style="margin-top:0.75rem;">Early on, progress feels slow because the balance is small and contributions do most of the work. But as the balance grows, the returns themselves become large enough to add meaningful money each month — and the larger balance generates even larger returns. This self-reinforcing cycle is why the curve bends upward over time, and why <strong>time in the market matters more than timing the market</strong>.</p>
+    <p style="margin-top:0.75rem;">The scenarios above show the power of the return rate: a 6-percentage-point difference between the 4% and 10% scenarios shortens the journey by roughly <strong>three decades</strong>.</p>
+  </section>
+
+  <section>
+    <h2>Risks &amp; Disclaimer</h2>
+    <div class="disclaimer">
+      <p><strong>This page is an educational projection tool, not financial advice.</strong> It illustrates how compound growth works under simplified, hypothetical assumptions. It is not a recommendation, endorsement, or prediction of future results.</p>
+      <ul style="margin-top:0.75rem;">
+        <li><strong>Market returns are not guaranteed.</strong> Real investments fluctuate — some years are negative. A constant annual return is a simplification.</li>
+        <li><strong>Sequence-of-returns risk:</strong> the order of good and bad years matters, especially when withdrawing.</li>
+        <li><strong>Inflation</strong> reduces purchasing power; $1,000,000 in the future will not buy what it does today.</li>
+        <li><strong>Taxes and fees</strong> are not modeled and will reduce real-world results.</li>
+        <li>Consult a qualified financial professional before making investment decisions.</li>
+      </ul>
+    </div>
+  </section>
+
+  <footer>
+    <p>Built as a single-page educational demo · No data is collected or stored</p>
+  </footer>
+
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  // ----- Shared math helpers -----
+
+  function annualToMonthly(annualRate) {
+    return Math.pow(1 + annualRate, 1 / 12) - 1;
+  }
+
+  function futureValue(monthlyRate, months, startingCapital, monthlyContribution) {
+    var growthFactor = Math.pow(1 + monthlyRate, months);
+    var fromStart = startingCapital * growthFactor;
+    var fromContributions = monthlyContribution * (growthFactor - 1) / monthlyRate;
+    return fromStart + fromContributions;
+  }
+
+  function monthsToTarget(monthlyRate, startingCapital, monthlyContribution, target) {
+    if (monthlyRate <= 0) {
+      if (monthlyContribution <= 0) return Infinity;
+      return Math.ceil((target - startingCapital) / monthlyContribution);
+    }
+    var months = 0;
+    while (futureValue(monthlyRate, months, startingCapital, monthlyContribution) < target && months < 1200) {
+      months++;
+    }
+    return months;
+  }
+
+  function fmtMoney(n) {
+    if (!isFinite(n)) return "—";
+    return "$" + Math.round(n).toLocaleString("en-US");
+  }
+  function fmtPct(n, digits) {
+    return (n * 100).toFixed(digits === undefined ? 4 : digits) + "%";
+  }
+  function fmtYears(months) {
+    if (!isFinite(months)) return "Never";
+    return (months / 12).toFixed(1);
+  }
+
+  // ----- Interactive Calculator -----
+
+  var calcStart = document.getElementById("calc-start");
+  var calcStartSlider = document.getElementById("calc-start-slider");
+  var calcMonthly = document.getElementById("calc-monthly");
+  var calcMonthlySlider = document.getElementById("calc-monthly-slider");
+  var calcTarget = document.getElementById("calc-target");
+  var calcTargetSlider = document.getElementById("calc-target-slider");
+  var calcReturn = document.getElementById("calc-return");
+  var calcReturnSlider = document.getElementById("calc-return-slider");
+
+  var calcYears = document.getElementById("calc-years");
+  var calcContributed = document.getElementById("calc-contributed");
+  var calcGrowth = document.getElementById("calc-growth");
+
+  function updateCalc() {
+    var start = Math.max(0, parseFloat(calcStart.value) || 0);
+    var monthly = Math.max(0, parseFloat(calcMonthly.value) || 0);
+    var target = Math.max(1, parseFloat(calcTarget.value) || 1);
+    var annualReturn = Math.max(0, parseFloat(calcReturn.value) || 0) / 100;
+
+    var monthlyRate = annualToMonthly(annualReturn);
+    var months = monthsToTarget(monthlyRate, start, monthly, target);
+    var contributed = start + monthly * months;
+    var growth = isFinite(months) ? target - contributed : NaN;
+
+    calcYears.textContent = isFinite(months) ? fmtYears(months) + " years" : "Never";
+    calcContributed.textContent = fmtMoney(contributed);
+    calcGrowth.textContent = isFinite(growth) ? fmtMoney(growth) : "—";
+  }
+
+  [calcStart, calcMonthly, calcTarget, calcReturn].forEach(function (input) {
+    input.addEventListener("input", function () {
+      var slider = document.getElementById(input.id + "-slider");
+      var val = parseFloat(input.value);
+      if (!isNaN(val)) slider.value = val;
+      updateCalc();
+    });
+  });
+
+  [calcStartSlider, calcMonthlySlider, calcTargetSlider, calcReturnSlider].forEach(function (slider) {
+    slider.addEventListener("input", function () {
+      var numberInput = document.getElementById(slider.id.replace("-slider", ""));
+      numberInput.value = slider.value;
+      updateCalc();
+    });
+  });
+
+  updateCalc();
+
+  // ----- Static scenario table (4%, 6%, 8%, 10%) -----
+
+  var STARTING_CAPITAL = 500;
+  var MONTHLY_CONTRIBUTION = 200;
+  var TARGET = 1000000;
+  var ANNUAL_SCENARIOS = [0.04, 0.06, 0.08, 0.10];
+
+  var tableBody = document.getElementById("scenario-table");
+  var results = ANNUAL_SCENARIOS.map(function (annual) {
+    var monthly = annualToMonthly(annual);
+    var months = monthsToTarget(monthly, STARTING_CAPITAL, MONTHLY_CONTRIBUTION, TARGET);
+    var contributed = STARTING_CAPITAL + MONTHLY_CONTRIBUTION * months;
+    var growth = TARGET - contributed;
+    return { annual: annual, monthly: monthly, months: months, contributed: contributed, growth: growth };
+  });
+
+  results.forEach(function (r) {
+    var tr = document.createElement("tr");
+    tr.innerHTML =
+      "<td>" + fmtPct(r.annual, 1) + "</td>" +
+      "<td>" + fmtPct(r.monthly) + "</td>" +
+      "<td class='years'>" + fmtYears(r.months) + "</td>" +
+      "<td>" + fmtMoney(r.contributed) + "</td>" +
+      "<td>" + fmtMoney(r.growth) + "</td>";
+    tableBody.appendChild(tr);
+  });
+
+  // ----- Bar chart -----
+
+  var chart = document.getElementById("bar-chart");
+  var maxMonths = Math.max.apply(null, results.map(function (r) { return r.months; }));
+
+  results.forEach(function (r) {
+    var row = document.createElement("div");
+    row.className = "bar-row";
+
+    var label = document.createElement("div");
+    label.className = "bar-label";
+    label.textContent = fmtPct(r.annual, 0);
+
+    var track = document.createElement("div");
+    track.className = "bar-track";
+
+    var fill = document.createElement("div");
+    fill.className = "bar-fill";
+    fill.style.width = (r.months / maxMonths * 100) + "%";
+
+    var value = document.createElement("div");
+    value.className = "bar-value";
+    value.textContent = fmtYears(r.months) + " yrs";
+
+    track.appendChild(fill);
+    row.appendChild(label);
+    row.appendChild(track);
+    row.appendChild(value);
+    chart.appendChild(row);
+  });
+})();
+</script>
+</body>
+</html>
